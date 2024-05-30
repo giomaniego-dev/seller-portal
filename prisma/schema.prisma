@@ -1,0 +1,102 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model Seller {
+  id             String  @id @default(auto()) @map("_id") @db.ObjectId
+  broker         String?
+  email          String  @unique
+  contactNumber  String?
+  agentName      String
+  hashedPassword String?
+
+  accounts     Account[]
+  buyers       Buyer[]
+  reservations Reservations[]
+}
+
+model Account {
+  id                String  @id @default(auto()) @map("_id") @db.ObjectId
+  sellerId          String  @db.ObjectId
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.String
+  access_token      String? @db.String
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.String
+  session_state     String?
+
+  seller Seller @relation(fields: [sellerId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Buyer {
+  id            String         @id @default(auto()) @map("_id") @db.ObjectId
+  sellerId      String         @db.ObjectId
+  firstName     String?
+  lastName      String?
+  middleName    String?
+  emailAddress  String?
+  contactNumber String?
+  gender        Gender?
+  maritalstatus MaritalStatus?
+  birthDate     DateTime?
+  address       String?
+  currentSalary String?
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  reservations  Reservations[]
+
+  seller Seller @relation(fields: [sellerId], references: [id], onDelete: Cascade)
+}
+
+model UnitInformation {
+  id                 String   @id @default(auto()) @map("_id") @db.ObjectId
+  name               String?
+  block              String?
+  lot                String?
+  lotArea            String?
+  type               String?
+  floorArea          String?
+  tcp                Float?
+  constructionStatus Boolean?
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  reservations Reservations[]
+}
+
+model Reservations {
+  id       String @id @default(auto()) @map("_id") @db.ObjectId
+  sellerId String @db.ObjectId
+  buyerId  String @db.ObjectId
+  unitId   String @db.ObjectId
+
+  seller Seller          @relation(fields: [sellerId], references: [id], onDelete: Cascade)
+  buyer  Buyer           @relation(fields: [buyerId], references: [id], onDelete: Cascade)
+  unit   UnitInformation @relation(fields: [unitId], references: [id], onDelete: Cascade)
+}
+
+enum MaritalStatus {
+  Single
+  Married
+  Divorced
+  Widowed
+}
+
+enum Gender {
+  Male
+  Female
+}

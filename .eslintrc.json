@@ -1,0 +1,39 @@
+{
+  "root": true,
+  "extends": ["next/core-web-vitals", "plugin:react/recommended"],
+  "parser": "@typescript-eslint/parser",
+  "plugins": ["@typescript-eslint"],
+  "ignorePatterns": ["node_modules/", ".next/", "out/", "src/__generated__/**/*.ts"],
+  "overrides": [
+    {
+      "files": ["*.ts", "*.tsx"],
+      "rules": {
+        "@typescript-eslint/no-shadow": ["error"],
+        "@typescript-eslint/no-unused-vars": [
+          "error",
+          { "varsIgnorePattern": "^_", "argsIgnorePattern": "^_" }
+        ],
+        "no-shadow": "off",
+        "no-undef": "off",
+        "react-hooks/exhaustive-deps": "off",
+        "react-native/no-inline-styles": "off",
+        "react/no-unstable-nested-components": "off"
+      }
+    },
+    {
+      "files": ["./**/*.ts"],
+      "excludedFiles": ["./**/*.spec.ts", "./**/*.test.ts"]
+    }
+  ],
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  },
+  "rules": {
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "warn",
+    "react/prop-types": "off",
+    "react/react-in-jsx-scope": "off" // Disable react/react-in-jsx-scope rule
+  }
+}
