@@ -1,4 +1,4 @@
-# Homemark Seller Portal
+# Seller Portal
 
 A fully responsive real estate app made with NextJs 13 (app router), PostgresDB, Next-Auth and Docker.
 
